@@ -13,6 +13,13 @@ const publicRoutes = [
   '/auth/logout',
   '/install',
   '/currencies',
+  '/coverage',
+  '/coverage/',
+  '/coverage/show',
+  '/coverage/object',
+  '/coverage/reset',
+  '/coverage/download',
+  '/coverage/client',
 ];
 
 module.exports = (app) => {

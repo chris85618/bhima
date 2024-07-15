@@ -26,6 +26,7 @@ COPY --chown=node:node .env.docker /usr/src/app/.env
 RUN npm install && \
    NODE_ENV=production npm run build && \
    npm install --omit=dev
+RUN npm install istanbul-middleware
 
 # Change directory to bin
 WORKDIR /usr/src/app/bin/

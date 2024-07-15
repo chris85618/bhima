@@ -21,8 +21,19 @@
  * @copyright IMA World Health 2016
  */
 
-require('use-strict');
+//require('use-strict');
 require('dotenv').config();
+
+var im = require('istanbul-middleware'),
+  isCoverageEnabled = true;
+
+//before your code is require()-ed, hook the loader for coverage
+if (isCoverageEnabled) {
+  console.log('Turning on hook loader for coverage!');
+  im.hookLoader(__dirname);
+  // cover all files except under node_modules
+  // see API for other options
+}
 
 const http = require('http');
 const express = require('express');
@@ -75,5 +86,11 @@ process.on('unhandledRejection', (e) => {
 process.on('warning', (warning) => {
   debug('process.onWarning: %o', warning);
 });
+
+// add the coverage handler
+if (isCoverageEnabled) {
+  //enable coverage endpoints under /coverage
+  app.use('/coverage', im.createHandler());
+}
 
 module.exports = app;
