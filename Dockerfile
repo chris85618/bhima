@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
   libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 \
   libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 \
   libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 \
-  libxss1 libxtst6 lsb-release libxshmfence1 chromium -y \
+  libxss1 libxtst6 lsb-release libxshmfence1 chromium bash -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -45,4 +45,4 @@ LABEL org.opencontainers.image.description="A hospital information management ap
 LABEL org.opencontainers.image.licenses=GPL
 
 # Define startup command
-CMD ["node", "server/app.js"]
+CMD ["bash", "docker-entrypoint.sh"]
