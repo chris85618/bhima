@@ -16,23 +16,24 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /usr/src/app
 
+COPY --chown=node:node package.json package-lock.json /usr/src/app/
+
+# Install dependencies
+RUN npm install && \
+   npm install --omit=dev
+RUN npm install istanbul-middleware
+
 # Copy source code
-COPY --chown=node:node . .
+COPY --chown=node:node . /usr/src/app/
 
 # Copy environment file to bin folder
 COPY --chown=node:node .env.docker /usr/src/app/.env
 
-# Install dependencies
-RUN npm install && \
-   NODE_ENV=production npm run build && \
-   npm install --omit=dev
-RUN npm install istanbul-middleware
+# Package
+RUN NODE_ENV=production npm run build && chown -R node:node /usr/src/app/bin
 
 # Change directory to bin
 WORKDIR /usr/src/app/bin/
-
-# Set ownership
-RUN chown -R node:node *
 
 # Switch to non-root user
 USER node
