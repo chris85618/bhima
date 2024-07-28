@@ -12,14 +12,30 @@ services:
       - DB_NAME=${DB_NAME:-bhima_db_name}
       - DB_PASS=${DB_PASS:-db_password}
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - backend
+    volumes:
+      - ./docker-entrypoint.sh:/usr/src/app/bin/docker-entrypoint.sh
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:$$PORT/"]
+      interval: 15s
+      timeout: 5s
+      retries: 40
+      start_period: 9m
 
   mysql:
     image: mysql:8.4
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "test `mysqladmin ping -u$$MYSQL_USER -p$$MYSQL_PASSWORD -h localhost | grep -oc '^mysqld is alive$$'` -eq 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 13
+      start_period: 9m
     command:
       - --sql-mode=STRICT_ALL_TABLES,NO_UNSIGNED_SUBTRACTION
       - --mysql-native-password=ON
@@ -39,6 +55,12 @@ services:
     restart: unless-stopped
     networks:
       - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
 networks:
   backend:
