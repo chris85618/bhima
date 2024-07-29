@@ -21,7 +21,7 @@ COPY --chown=node:node package.json package-lock.json /usr/src/app/
 # Install dependencies
 RUN npm install && \
    npm install --omit=dev
-RUN npm install istanbul-middleware
+RUN npm install istanbul-middleware request
 
 # Copy source code
 COPY --chown=node:node . /usr/src/app/

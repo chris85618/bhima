@@ -4,6 +4,6 @@ if [ ! -f /initizlized ]; then
     bash sh/build-database.sh;
     touch /initialized;
     echo "====Initialized====";
-fi
+fi &
 
 node server/app.js;

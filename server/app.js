@@ -57,6 +57,35 @@ function configureServer() {
     .listen(port, () => {
       debug(`configureServer(): Server started in mode ${mode} on port ${port}.`);
     });
+  
+  const request = require('request');
+  request.post({
+    url: `http://localhost:${port}/install`,
+    json: {
+      "enterprise": {
+        "name": "selab",
+        "abbr": "selab",
+        "currency_id": 2
+      },
+      "project": {
+        "name": "selab",
+        "abbr": "selab"
+      },
+      "user": {
+        "username": "admin",
+        "password": "selab1623",
+        "repassword": "selab1623"
+      }
+    }
+  }, (error, response, body) => {
+    if (error) {
+      console.error('Failed to create first admin:', error);
+    } else if (response.statusCode !== 200) {
+      console.error('Failed to create first admin:', body);
+    } else {
+      console.log('First admin created successfully.');
+    }
+  });
 }
 
 // run configuration tools
